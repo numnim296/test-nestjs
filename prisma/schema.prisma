@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model devices {
+  id         Int       @id @default(autoincrement())
+  sn         String    @db.VarChar(100)
+  number     Int
+  remark     String?   @db.Text
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0)
+}
+
+model devices_logs {
+  id         Int      @id @default(autoincrement())
+  dev_id     Int
+  action     String   @db.VarChar(100)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+}
+
+model payments {
+  id         Int       @id @default(autoincrement())
+  txid       String    @db.VarChar(100)
+  amount     Float     @default(0)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0)
+}
+
+model roles {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(100)
+  created_at DateTime @default(now()) @db.Timestamp(0)
+  updated_at DateTime @default(now()) @db.Timestamp(0)
+}
+
+model users {
+  id         Int       @id @default(autoincrement())
+  email      String    @db.VarChar(100)
+  password   String    @db.VarChar(100)
+  salt       String    @db.VarChar(100)
+  role_id    Int
+  name       String    @db.VarChar(100)
+  created_at DateTime? @db.Timestamp(0)
+  updated_at DateTime  @default(now()) @db.Timestamp(0)
+}
