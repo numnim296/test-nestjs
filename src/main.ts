@@ -1,13 +1,27 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import secureSession from '@fastify/secure-session'
-
+import { AppModule } from './modules/app.module';
+import { ValidationPipe } from '@nestjs/common';
+// import * as session from 'express-session';
+// import * as passport from 'passport';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe());
+  // app.use(
+  //   session({
+  //     secret: "smart-meter",
+  //     resave: false,
+  //     saveUninitializd: false,
+  //     cookie: { maxAge: 3600000 }
+  //   }
+  //   )
+  // )
+  // app.use(passport.initialize());
+  // app.use(passport.session());
   await app.listen(3000);
 }
 bootstrap();
+
 
 // import compression from '@fastify/compress'
 // import helmet from '@fastify/helmet'
@@ -18,7 +32,7 @@ bootstrap();
 // import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 // import { v4 as UUIDv4 } from 'uuid'
 // import * as packageJson from '../package.json'
-// import { AppModule } from 'src/app.module'
+// import { AppModule } from './modules/app.module'
 // import { ConfigService, LoggerService } from './services'
 // import fastifyCors from '@fastify/cors'
 // import fastifyMultipart from '@fastify/multipart'
@@ -66,6 +80,7 @@ bootstrap();
 //   )
 //   const configService = app.get(ConfigService)
 //   const port = configService.get<number>('application.port')
+
 //   app.useLogger(app.get(LoggerService))
 //   app.useGlobalPipes(new ValidationPipe())
 

@@ -1,4 +1,5 @@
 import { Provider } from '@nestjs/common'
+import { JwtStrategy } from 'src/jwt.strategy'
 import {
 
   PrismaService,
@@ -6,8 +7,10 @@ import {
   AuthService
 } from '../services'
 
+
 export const ServiceProvider: Provider[] = [
   PrismaService,
   UserService,
-  AuthService
+  AuthService,
+  JwtStrategy
 ]
