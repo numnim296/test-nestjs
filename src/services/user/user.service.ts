@@ -11,7 +11,18 @@ export class UserService {
 
     async getAllUser(req: FastifyRequest, res: FastifyReply) {
         try {
-            let data = await this.prismaService.users.findMany({})
+            let data = await this.prismaService.users.findMany({
+                select: {
+                    id:true,
+                    email: true,
+                    name: true,
+                    mobile:true,
+                    created_at:true,
+                    status:true,
+                    role_id:true
+                  },
+            })
+            
             return res.status(200).send(data)
         } catch (error) {
             throw new HttpException({
@@ -34,6 +45,8 @@ export class UserService {
                     role_id: body.role_id,
                     created_at: new Date(),
                     salt: password.salt,
+                    status:1,
+                    mobile:body.mobile,
                 },
             })
             return res.status(HttpStatus.OK).send({
@@ -59,6 +72,8 @@ export class UserService {
                 data: {
                     name: body.name,
                     email: body.email,
+                    mobile:body.mobile,
+                    status:body.status,
                 },
             })
             return res.status(HttpStatus.OK).send({
@@ -83,7 +98,7 @@ export class UserService {
                     id: Number(id),
                 },
                 data: {
-                    // status: "inactive",
+                    status: 0,
                 },
             })
             return res.status(HttpStatus.OK).send({

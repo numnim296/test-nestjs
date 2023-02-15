@@ -54,16 +54,14 @@ export class AuthService {
     async login(dto: LoginDto) {
         const user = await this.prismaService.users.findFirst({
             where: {
-                //username not email
-                email: dto.username,
-                //   status: 'ACTIVE',
+                email: dto.email,
+                status: 1,
             },
         });
 
         if (!user) throw new ForbiddenException('Access Denied');
 
         if (!user || !compare(dto.password, user.password, user.salt)) {
-            console.log('jijitttt')
             throw new UnauthorizedException()
         }
         const tokens = await this.getTokens(user.id, user.email);
@@ -86,7 +84,7 @@ export class AuthService {
         const [at, rt] = await Promise.all([
             this.jwtService.signAsync(jwtPayload, {
                 secret: this.config.get<string>('AT_SECRET'),
-                expiresIn: '15m',
+                expiresIn: '1d',
             }),
             this.jwtService.signAsync(jwtPayload, {
                 secret: this.config.get<string>('RT_SECRET'),

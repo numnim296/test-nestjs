@@ -21,14 +21,39 @@ export class CreateUserDto {
     @IsNumber()
     role_id: number
 
+    @IsNotEmpty()
+    @IsString()
+    mobile: string
+
+    @IsNotEmpty()
+    @IsNumber()
+    status: number
+
+
 }
 
 
 
-export class UpdateUserDto extends CreateUserDto {
+export class UpdateUserDto  {
+    @IsNotEmpty()
+    @IsNumber()
+    id: number
+
     @IsOptional()
     @IsString()
-    id: number
+    email: string
+
+    @IsOptional()
+    @IsString()
+    name: string
+
+    @IsOptional()
+    @IsString()
+    mobile: string
+
+    @IsOptional()
+    @IsNumber()
+    status: number
 
 }
 
