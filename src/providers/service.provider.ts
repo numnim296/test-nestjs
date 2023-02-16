@@ -5,7 +5,8 @@ import {
 
   PrismaService,
   UserService,
-  AuthService
+  AuthService,
+  CustomersService
 } from '../services'
 
 
@@ -14,5 +15,6 @@ export const ServiceProvider: Provider[] = [
   UserService,
   AuthService,
   JwtStrategy,
-  RoleService
+  RoleService,
+  CustomersService
 ]
