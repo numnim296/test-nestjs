@@ -10,10 +10,12 @@ export class UserController {
     constructor(private userService: UserService) { }
 
     @UseGuards(AuthGuard('jwt'))
-    @Get()
-    getAllUserProfile(@Req() req: FastifyRequest, @Res() res: FastifyReply) {
-        return this.userService.getAllUser(req, res)
+    @Get('/:pages/:size')
+    getAllUserProfile(@Param('pages') pages: string, @Param('size') size: string, @Res() res: FastifyReply) {
+        console.log(pages, size)
+        return this.userService.getAllUser(pages, size, res)
     }
+
 
     @UseGuards(AuthGuard('jwt'))
     @Post('create')
@@ -34,6 +36,11 @@ export class UserController {
         return this.userService.deleteUserProfile(id, res)
     }
 
+    @UseGuards(AuthGuard('jwt'))
+    @Get('search/:word/:pages/:size')
+    searchData(@Param('word') word: string,@Param('pages') pages: string,@Param('size') size: string, @Res() res: FastifyReply) {
+        return this.userService.searchData(word,pages,size, res)
+    }
 
 
 }

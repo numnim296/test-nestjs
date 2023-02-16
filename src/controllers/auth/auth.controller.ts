@@ -6,12 +6,6 @@ import { AuthService } from 'src/services'
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) { }
-
-    // @Post('login')
-    // login(@Body() body: LoginDto, @Session() session: secureSession.Session) {
-    //     return this.authService.login(body, session)
-    // }
-
     
     @Post('login')
     login(@Body() dto: LoginDto): Promise<any> {

@@ -4,26 +4,38 @@ import { PrismaService } from '../prisma/prisma.service';
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { CreateUserDto } from 'src/dto/user.dto';
 import { hash } from 'src/helpers/hash';
+import { randomBytes } from 'crypto'
+import { Prisma } from '@prisma/client'
+import { set } from 'lodash'
 
 @Injectable()
 export class UserService {
     constructor(private readonly prismaService: PrismaService) { }
 
-    async getAllUser(req: FastifyRequest, res: FastifyReply) {
+    async getAllUser(pages: string, size: string, res: FastifyReply) {
+
         try {
+            let take = Number(size)
+            let skip = (Number(pages) - 1) * take
             let data = await this.prismaService.users.findMany({
                 select: {
-                    id:true,
+                    id: true,
                     email: true,
                     name: true,
-                    mobile:true,
-                    created_at:true,
-                    status:true,
-                    role_id:true
-                  },
+                    mobile: true,
+                    created_at: true,
+                    status: true,
+                    role_id: true
+                },
+                take: take,
+                skip: skip,
             })
-            
-            return res.status(200).send(data)
+
+            return res.status(200).send({
+                data: data,
+                pages: pages,
+                size: size
+            })
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -36,7 +48,12 @@ export class UserService {
 
     async addUserProfile(body: CreateUserDto, res: FastifyReply) {
         try {
-            const password = hash(body.password)
+
+            const passwordRandom = randomBytes(8).toString('base64')
+            console.log("password - ", passwordRandom);
+            // /clUsSOA8Lc=
+            //send password to email
+            const password = hash(passwordRandom)
             await this.prismaService.users.create({
                 data: {
                     name: body.name,
@@ -45,8 +62,8 @@ export class UserService {
                     role_id: body.role_id,
                     created_at: new Date(),
                     salt: password.salt,
-                    status:1,
-                    mobile:body.mobile,
+                    status: 1,
+                    mobile: body.mobile,
                 },
             })
             return res.status(HttpStatus.OK).send({
@@ -72,8 +89,8 @@ export class UserService {
                 data: {
                     name: body.name,
                     email: body.email,
-                    mobile:body.mobile,
-                    status:body.status,
+                    mobile: body.mobile,
+                    status: body.status,
                 },
             })
             return res.status(HttpStatus.OK).send({
@@ -133,6 +150,59 @@ export class UserService {
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
                 error: 'cannot reset password',
+            }, HttpStatus.INTERNAL_SERVER_ERROR, {
+                cause: error
+            });
+        }
+    }
+
+    async searchData(word: string, pages: string, size: string, res: FastifyReply) {
+
+        try {
+            let take = Number(size)
+            let skip = (Number(pages) - 1) * take
+            let data = await this.prismaService.users.findMany({
+                where: {
+                    OR: [
+                        {
+                            email: {
+                                contains: word,
+                            },
+                        },
+                        {
+                            mobile: {
+                                contains: word,
+                            },
+                        },
+                        {
+                            name: {
+                                contains: word,
+                            },
+                        },
+                    ],
+                },
+                select: {
+                    id: true,
+                    email: true,
+                    name: true,
+                    mobile: true,
+                    created_at: true,
+                    status: true,
+                    role_id: true
+                },
+                take: take,
+                skip: skip,
+            })
+
+            return res.status(200).send({
+                data: data,
+                pages: pages,
+                size: size
+            })
+        } catch (error) {
+            throw new HttpException({
+                status: HttpStatus.INTERNAL_SERVER_ERROR,
+                error: 'cannot found data',
             }, HttpStatus.INTERNAL_SERVER_ERROR, {
                 cause: error
             });
