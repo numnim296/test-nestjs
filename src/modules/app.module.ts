@@ -20,8 +20,8 @@ import { MailerModule } from '@nestjs-modules/mailer'
     }),
     MailerModule.forRoot({
       transport:{
-        host:'smtp.gmail.com',
-        port:578,
+        host:'smtp.office365.com',
+        port:587,
         secure:false,
         auth:{
           user:"",

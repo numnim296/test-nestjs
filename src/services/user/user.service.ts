@@ -57,37 +57,53 @@ export class UserService {
             console.log("password - ", passwordRandom);
             // /clUsSOA8Lc=
             //send password to email
-            // this.mailDto.to = ""
-            // this.mailDto.from = ""
-            // this.mailDto.subject = ""
-            // this.mailDto.html = ""
-            // const [isSendMail, errorMessage] = await this.mailService.sendMail(this.mailDto)
-            // if (isSendMail) {
-            const password = hash(passwordRandom)
-            await this.prismaService.users.create({
-                data: {
-                    name: body.name,
-                    email: body.email,
-                    password: password.hash,
-                    role_id: body.role_id,
-                    created_at: new Date(),
-                    salt: password.salt,
-                    status: 1,
-                    mobile: body.mobile,
-                },
-            })
-            // return res.status(HttpStatus.OK).send({
-            //     status: HttpStatus.OK,
-            //     message: "create user profile success!"
-            // })
-            // } else {
-            // throw new HttpException({
-            //     status: HttpStatus.INTERNAL_SERVER_ERROR,
-            //     error: 'cannot send password to email. please check your mail and try again.',
-            // }, HttpStatus.INTERNAL_SERVER_ERROR, {
-            //     cause: errorMessage
-            // });
-            // }
+            this.mailDto.to = body.email
+            this.mailDto.from = ""
+            this.mailDto.subject = "smartmeter password"
+            this.mailDto.html = `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Smart Meter</title>
+            </head>
+            <body> 
+                <div>
+                    <p>รหัสผ่านคือ ${passwordRandom}</p>
+                </div>
+            </body>
+            </html>
+             `
+            const [isSendMail, errorMessage] = await this.mailService.sendMail(this.mailDto)
+            if (isSendMail) {
+                const password = hash(passwordRandom)
+
+                await this.prismaService.users.create({
+                    data: {
+                        name: body.name,
+                        email: body.email,
+                        password: password.hash,
+                        role_id: body.role_id,
+                        created_at: new Date(),
+                        salt: password.salt,
+                        status: 1,
+                        mobile: body.mobile,
+                    },
+                })
+                return res.status(HttpStatus.OK).send({
+                    status: HttpStatus.OK,
+                    message: "create user profile success!"
+                })
+            } else {
+                throw new HttpException({
+                    status: HttpStatus.INTERNAL_SERVER_ERROR,
+                    error: 'cannot send password to email. please check your mail and try again.',
+                }, HttpStatus.INTERNAL_SERVER_ERROR, {
+                    cause: errorMessage
+                });
+            }
 
         } catch (error) {
             throw new HttpException({

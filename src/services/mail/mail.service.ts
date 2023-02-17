@@ -8,6 +8,7 @@ export class MailService {
 
     async sendMail(mailDto: MailDto): Promise<[isSend:boolean,error:any]> {
         let { to, from, subject, html } = mailDto
+        console.log('send',to,from,subject,html)
         try {
             await this.mailerService.sendMail({
                 to: to,
@@ -15,6 +16,7 @@ export class MailService {
                 subject: subject,
                 html: html
             })
+            console.log('send password to mail success')
             return [true,'']
         } catch (error) {
             return [false,error]

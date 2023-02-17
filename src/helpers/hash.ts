@@ -16,6 +16,7 @@ export function hash(data: string) {
 }
 
 export function compare(data: string, hash: string, salt: string) {
+    console.log('hash - ',hash)
     console.log("hash compare", pbkdf2Sync(data, salt, iterations, keylen, digest).toString(`hex`))
     return pbkdf2Sync(data, salt, iterations, keylen, digest).toString(`hex`) === hash
 }
