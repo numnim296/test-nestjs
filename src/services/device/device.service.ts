@@ -1,8 +1,6 @@
 import { CreateDeviceDto, UpdateDeviceDto } from './../../dto/device.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { randomBytes } from 'crypto';
 import { FastifyReply } from 'fastify';
-import { hash } from 'src/helpers/hash';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -17,12 +15,17 @@ export class DeviceService {
             let data = await this.prismaService.devices.findMany({
                 select: {
                     id: true,
-                    // email: true,
-                    // name: true,
-                    // mobile: true,
-                    // created_at: true,
-                    // status: true,
-                    // role_id: true,
+                    device_id: true,
+                    device_name: true,
+                    brand: true,
+                    model: true,
+                    sn: true,
+                    meter_number: true,
+                    start_date: true,
+                    end_date: true,
+                    note: true,
+                    status: true,
+                    created_at: true
                 },
                 take: take,
                 skip: skip,
@@ -46,24 +49,21 @@ export class DeviceService {
     async addDevice(body: CreateDeviceDto, res: FastifyReply) {
         try {
 
-            const passwordRandom = randomBytes(8).toString('base64')
-            console.log("password - ", passwordRandom);
-            // /clUsSOA8Lc=
-            //send password to email
-            const password = hash(passwordRandom)
-
-            // await this.prismaService.devices.create({
-            // data: {
-            // name: body.name,
-            // email: body.email,
-            // password: password.hash,
-            // role_id: body.role_id,
-            // created_at: new Date(),
-            // salt: password.salt,
-            // status: 1,
-            // mobile: body.mobile,
-            // },
-            // })
+            await this.prismaService.devices.create({
+                data: {
+                    device_id: body.device_id,
+                    device_name: body.device_name,
+                    brand: body.brand,
+                    model: body.model,
+                    sn: body.sn,
+                    meter_number: body.meter_number,
+                    start_date: body.start_date,
+                    end_date: body.end_date,
+                    note: body.note,
+                    status: body.status,
+                    created_at: new Date()
+                },
+            })
 
             return res.status(HttpStatus.OK).send({
                 status: HttpStatus.OK,
@@ -83,13 +83,19 @@ export class DeviceService {
         try {
             await this.prismaService.devices.update({
                 where: {
-                    // id: body.id,
+                    id: body.id,
                 },
                 data: {
-                    // name: body.name,
-                    // email: body.email,
-                    // mobile: body.mobile,
-                    // status: body.status,
+                    device_id: body.device_id,
+                    device_name: body.device_name,
+                    brand: body.brand,
+                    model: body.model,
+                    sn: body.sn,
+                    meter_number: body.meter_number,
+                    start_date: body.start_date,
+                    end_date: body.end_date,
+                    note: body.note,
+                    status: body.status,
                 },
             })
             return res.status(HttpStatus.OK).send({
@@ -114,7 +120,7 @@ export class DeviceService {
                     id: Number(id),
                 },
                 data: {
-                    // status: 0,
+                    status: 0,
                 },
             })
             return res.status(HttpStatus.OK).send({
@@ -140,31 +146,41 @@ export class DeviceService {
             let data = await this.prismaService.devices.findMany({
                 where: {
                     OR: [
-                        // {
-                        //     email: {
-                        //         contains: word,
-                        //     },
-                        // },
-                        // {
-                        //     mobile: {
-                        //         contains: word,
-                        //     },
-                        // },
-                        // {
-                        //     name: {
-                        //         contains: word,
-                        //     },
-                        // },
+                        {
+                            device_id: {
+                                contains: word,
+                            },
+                        },
+                        {
+                            device_name: {
+                                contains: word,
+                            },
+                        },
+                        {
+                            brand: {
+                                contains: word,
+                            },
+                        },
+                        {
+                            model: {
+                                contains: word,
+                            },
+                        },
                     ],
                 },
                 select: {
                     id: true,
-                    // email: true,
-                    // name: true,
-                    // mobile: true,
-                    // created_at: true,
-                    // status: true,
-                    // role_id: true
+                    device_id: true,
+                    device_name: true,
+                    brand: true,
+                    model: true,
+                    sn: true,
+                    meter_number: true,
+                    start_date: true,
+                    end_date: true,
+                    note: true,
+                    status: true,
+                    created_at: true
                 },
                 take: take,
                 skip: skip,

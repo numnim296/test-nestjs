@@ -9,7 +9,7 @@ export class PaymentController {
 
     @UseGuards(AuthGuard('jwt'))
     @Get('/:pages/:size')
-    getAllUserProfile(@Param('pages') pages: string, @Param('size') size: string, @Res() res: FastifyReply) {
+    getAllPaymentTransaction(@Param('pages') pages: string, @Param('size') size: string, @Res() res: FastifyReply) {
         console.log(pages, size)
         return this.paymentService.getAllPaymentTransaction(pages, size, res)
     }

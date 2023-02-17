@@ -83,7 +83,7 @@ export class UserService {
             // } else {
             // throw new HttpException({
             //     status: HttpStatus.INTERNAL_SERVER_ERROR,
-            //     error: 'cannot send password to email',
+            //     error: 'cannot send password to email. please check your mail and try again.',
             // }, HttpStatus.INTERNAL_SERVER_ERROR, {
             //     cause: errorMessage
             // });

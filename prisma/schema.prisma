@@ -1,5 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -8,12 +8,19 @@ datasource db {
 }
 
 model devices {
-  id         Int       @id @default(autoincrement())
-  sn         String    @db.VarChar(100)
-  number     Int
-  remark     String?   @db.Text
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime  @default(now()) @db.Timestamp(0)
+  id           Int       @id @default(autoincrement())
+  device_id    String    @db.VarChar(100)
+  device_name  String    @db.VarChar(100)
+  brand        String    @db.VarChar(100)
+  model        String    @db.VarChar(100)
+  sn           String    @db.VarChar(100)
+  meter_number Int       @default(0)
+  start_date   DateTime? @db.Timestamp(0)
+  end_date     DateTime? @db.Timestamp(0)
+  note         String?   @db.Text
+  status       Int       @default(1)
+  created_at   DateTime? @db.Timestamp(0)
+  updated_at   DateTime? @db.Timestamp(0)
 }
 
 model devices_logs {
