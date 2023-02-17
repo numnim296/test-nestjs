@@ -1,16 +1,20 @@
+import { MailDto } from './../../dto/mail.dto';
+import { MailService } from './../mail/mail.service';
 import { ResetPasswordDto, UpdateUserDto } from './../../dto/user.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { FastifyReply, FastifyRequest } from 'fastify'
+import { FastifyReply } from 'fastify'
 import { CreateUserDto } from 'src/dto/user.dto';
 import { hash } from 'src/helpers/hash';
 import { randomBytes } from 'crypto'
-import { Prisma } from '@prisma/client'
-import { set } from 'lodash'
 
 @Injectable()
 export class UserService {
-    constructor(private readonly prismaService: PrismaService) { }
+    constructor(
+        private readonly prismaService: PrismaService,
+        private readonly mailService: MailService,
+        private readonly mailDto: MailDto
+    ) { }
 
     async getAllUser(pages: string, size: string, res: FastifyReply) {
 
@@ -53,6 +57,12 @@ export class UserService {
             console.log("password - ", passwordRandom);
             // /clUsSOA8Lc=
             //send password to email
+            // this.mailDto.to = ""
+            // this.mailDto.from = ""
+            // this.mailDto.subject = ""
+            // this.mailDto.html = ""
+            // const [isSendMail, errorMessage] = await this.mailService.sendMail(this.mailDto)
+            // if (isSendMail) {
             const password = hash(passwordRandom)
             await this.prismaService.users.create({
                 data: {
@@ -66,10 +76,19 @@ export class UserService {
                     mobile: body.mobile,
                 },
             })
-            return res.status(HttpStatus.OK).send({
-                status: HttpStatus.OK,
-                message: "create user profile success!"
-            })
+            // return res.status(HttpStatus.OK).send({
+            //     status: HttpStatus.OK,
+            //     message: "create user profile success!"
+            // })
+            // } else {
+            // throw new HttpException({
+            //     status: HttpStatus.INTERNAL_SERVER_ERROR,
+            //     error: 'cannot send password to email',
+            // }, HttpStatus.INTERNAL_SERVER_ERROR, {
+            //     cause: errorMessage
+            // });
+            // }
+
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -132,6 +151,7 @@ export class UserService {
         }
     }
 
+    // send data from website when user click
     async resetPassword(body: ResetPasswordDto, res: FastifyReply) {
         try {
             await this.prismaService.users.update({

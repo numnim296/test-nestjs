@@ -1,2 +1,5 @@
 export * from './auth.dto'
 export * from './user.dto'
+export * from './device.dto'
+export * from './mail.dto'
+export * from './role.dto'

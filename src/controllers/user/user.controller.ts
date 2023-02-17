@@ -1,7 +1,7 @@
 import { CreateUserDto, UpdateUserDto } from './../../dto/user.dto';
 import { UserService } from './../../services/user/user.service';
-import { Body, Controller, Delete, Get, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
-import { FastifyReply, FastifyRequest } from 'fastify'
+import { Body, Controller, Delete, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
+import { FastifyReply } from 'fastify'
 import { AuthGuard } from '@nestjs/passport';
 
 
@@ -38,8 +38,8 @@ export class UserController {
 
     @UseGuards(AuthGuard('jwt'))
     @Get('search/:word/:pages/:size')
-    searchData(@Param('word') word: string,@Param('pages') pages: string,@Param('size') size: string, @Res() res: FastifyReply) {
-        return this.userService.searchData(word,pages,size, res)
+    searchData(@Param('word') word: string, @Param('pages') pages: string, @Param('size') size: string, @Res() res: FastifyReply) {
+        return this.userService.searchData(word, pages, size, res)
     }
 
 

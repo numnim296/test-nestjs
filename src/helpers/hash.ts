@@ -1,4 +1,4 @@
-import { BinaryLike, pbkdf2Sync, randomBytes } from 'crypto'
+import { pbkdf2Sync, randomBytes } from 'crypto'
 
 const iterations = 10000
 const keylen = 32

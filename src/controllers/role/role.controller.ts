@@ -1,6 +1,6 @@
 import { UserRoleDto, UpdateUserRoleDto } from './../../dto/role.dto';
 import { RoleService } from './../../services/role/role.service';
-import { Body, Controller, Get, Param, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
 import { FastifyReply } from 'fastify'
 import { AuthGuard } from '@nestjs/passport';
 

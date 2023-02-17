@@ -1,12 +1,16 @@
-import { RoleService } from './../services/role/role.service';
 import { Provider } from '@nestjs/common'
+import { MailDto } from 'src/dto'
 import { JwtStrategy } from 'src/jwt.strategy'
 import {
 
   PrismaService,
   UserService,
   AuthService,
-  CustomersService
+  CustomersService,
+  MailService,
+  PaymentService,
+  DeviceService,
+  RoleService
 } from '../services'
 
 
@@ -16,5 +20,9 @@ export const ServiceProvider: Provider[] = [
   AuthService,
   JwtStrategy,
   RoleService,
-  CustomersService
+  CustomersService,
+  DeviceService,
+  PaymentService,
+  MailService,
+  MailDto
 ]
