@@ -27,11 +27,11 @@ export class CreateDeviceDto {
 
     @IsNotEmpty()
     @IsDateString()
-    start_date: string
+    start_date: Date
 
     @IsNotEmpty()
     @IsDateString()
-    end_date: string
+    end_date: Date
 
     @IsNotEmpty()
     @IsString()
@@ -40,6 +40,7 @@ export class CreateDeviceDto {
     @IsNotEmpty()
     @IsNumber()
     status: number
+
 
 }
 

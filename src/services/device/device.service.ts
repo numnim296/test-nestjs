@@ -61,7 +61,9 @@ export class DeviceService {
                     end_date: body.end_date,
                     note: body.note,
                     status: body.status,
-                    created_at: new Date()
+                    created_by:"",
+                    updated_by:""
+
                 },
             })
 

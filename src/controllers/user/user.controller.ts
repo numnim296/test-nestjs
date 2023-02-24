@@ -1,6 +1,6 @@
 import { CreateUserDto, UpdateUserDto } from './../../dto/user.dto';
 import { UserService } from './../../services/user/user.service';
-import { Body, Controller, Delete, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { FastifyReply } from 'fastify'
 import { AuthGuard } from '@nestjs/passport';
 
@@ -9,11 +9,18 @@ import { AuthGuard } from '@nestjs/passport';
 export class UserController {
     constructor(private userService: UserService) { }
 
+    // @UseGuards(AuthGuard('jwt'))
+    // @Get('/:pages/:size')
+    // getAllUserProfile(@Param('pages') pages: string, @Param('size') size: string, @Res() res: FastifyReply) {
+    //     console.log(pages, size)
+    //     return this.userService.getAllUser(pages, size, res)
+    // }
+
     @UseGuards(AuthGuard('jwt'))
-    @Get('/:pages/:size')
-    getAllUserProfile(@Param('pages') pages: string, @Param('size') size: string, @Res() res: FastifyReply) {
-        console.log(pages, size)
-        return this.userService.getAllUser(pages, size, res)
+    @Get('')
+    getAllUserProfile(@Query() params: any, @Res() res: FastifyReply) {
+        console.log(params.pages, params.size)
+        return this.userService.getAllUser(params.pages, params.size, res)
     }
 
 
@@ -31,15 +38,15 @@ export class UserController {
 
 
     @UseGuards(AuthGuard('jwt'))
-    @Delete('delete/:id')
-    deleteUserProfile(@Param("id") id: string, @Res() res: FastifyReply) {
-        return this.userService.deleteUserProfile(id, res)
+    @Delete('delete')
+    deleteUserProfile(@Query() params: any, @Res() res: FastifyReply) {
+        return this.userService.deleteUserProfile(params.id, res)
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Get('search/:word/:pages/:size')
-    searchData(@Param('word') word: string, @Param('pages') pages: string, @Param('size') size: string, @Res() res: FastifyReply) {
-        return this.userService.searchData(word, pages, size, res)
+    @Get('search')
+    searchData(@Query() params: any, @Res() res: FastifyReply) {
+        return this.userService.searchData(params.word, params.pages, params.size, res)
     }
 
 

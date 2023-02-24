@@ -1,6 +1,6 @@
 import { CreateDeviceDto, UpdateDeviceDto } from './../../dto/device.dto';
 import { DeviceService } from './../../services/device/device.service';
-import { Body, Controller, Get, Param, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FastifyReply } from 'fastify'
 
@@ -9,15 +9,15 @@ export class DeviceController {
     constructor(private deviceService: DeviceService) { }
 
     @UseGuards(AuthGuard('jwt'))
-    @Get('/:pages/:size')
-    getAllDevice(@Param('pages') pages: string, @Param('size') size: string, @Res() res: FastifyReply) {
-        return this.deviceService.getAllDevice(pages, size, res)
+    @Get('')
+    getAllDevice(@Query() params: any, @Res() res: FastifyReply) {
+        return this.deviceService.getAllDevice(params.pages, params.size, res)
     }
 
     @UseGuards(AuthGuard('jwt'))
-    @Get('search/:word/:pages/:size')
-    searchDevice(@Param('word') word: string, @Param('pages') pages: string, @Param('size') size: string, @Res() res: FastifyReply) {
-        return this.deviceService.searchData(word, pages, size, res)
+    @Get('search')
+    searchDevice(@Query() params: any, @Res() res: FastifyReply) {
+        return this.deviceService.searchData(params.word, params.pages, params.size, res)
     }
 
     @UseGuards(AuthGuard('jwt'))

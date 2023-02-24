@@ -34,11 +34,13 @@ export class UserService {
                 take: take,
                 skip: skip,
             })
+            let count = await this.prismaService.users.count()
 
             return res.status(200).send({
                 data: data,
                 pages: pages,
-                size: size
+                size: size,
+                count:count,
             })
         } catch (error) {
             throw new HttpException({

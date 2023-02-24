@@ -1,3 +1,4 @@
+import { CreateCustomersDto } from './../../dto/customers.dto';
 import { ResetPasswordDto, UpdateUserDto } from './../../dto/user.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
@@ -26,7 +27,7 @@ export class CustomersService {
                     mobile: true,
                     created_at: true,
                     status: true,
-                    role:true,
+                    role: true,
                 },
                 take: take,
                 skip: skip,
@@ -47,7 +48,7 @@ export class CustomersService {
         }
     }
 
-    async addCustomer(body: CreateUserDto, res: FastifyReply) {
+    async addCustomer(body: CreateCustomersDto, res: FastifyReply) {
         try {
 
             const passwordRandom = randomBytes(8).toString('base64')
@@ -55,7 +56,7 @@ export class CustomersService {
             // /clUsSOA8Lc=
             //send password to email
             const password = hash(passwordRandom)
-            await this.prismaService.users.create({
+            let dataUser = await this.prismaService.users.create({
                 data: {
                     name: body.name,
                     email: body.email,
@@ -67,9 +68,26 @@ export class CustomersService {
                     mobile: body.mobile,
                 },
             })
+
+            await this.prismaService.customers.create({
+                data: {
+                    user_id: dataUser["id"],
+                    name: body.name,
+                    email: body.email,
+                    mobile: body.mobile,
+                    address: body.address,
+                    sub_district: body.sub_district,
+                    district: body.district,
+                    province: body.province,
+                    postal_code: body.postal_code,
+                    created_by: '',
+                    updated_by: '',
+                    created_at: new Date()
+                },
+            })
             return res.status(HttpStatus.OK).send({
                 status: HttpStatus.OK,
-                message: "create user profile success!"
+                message: "create customer success!"
             })
         } catch (error) {
             throw new HttpException({

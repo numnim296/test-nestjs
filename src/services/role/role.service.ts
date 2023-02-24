@@ -136,7 +136,7 @@ export class RoleService {
                 data: {
 
                     email: body.email,
-                    role_id: body.id
+                    role_id: body.role_id
                 },
             })
             return res.status(HttpStatus.OK).send({
