@@ -57,6 +57,14 @@ export class AuthService {
                 email: dto.email,
                 status: 1,
             },
+            select: {
+                id: true,
+                email: true,
+                role: true,
+                password: true,
+                salt: true,
+                name: true,
+            }
         });
 
         if (!user) throw new ForbiddenException('Access Denied');
@@ -69,7 +77,9 @@ export class AuthService {
         const data = {
             access_token: tokens.access_token,
             id: user.id,
-            email: user.email
+            email: user.email,
+            role: user.role,
+            name:user.name
         }
 
         return data;

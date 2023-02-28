@@ -27,11 +27,11 @@ export class CreateDeviceDto {
 
     @IsNotEmpty()
     @IsDateString()
-    start_date: Date
+    start_date: string
 
     @IsNotEmpty()
     @IsDateString()
-    end_date: Date
+    end_date: string
 
     @IsNotEmpty()
     @IsString()

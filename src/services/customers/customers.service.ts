@@ -16,32 +16,41 @@ export class CustomersService {
         try {
             let take = Number(size)
             let skip = (Number(pages) - 1) * take
-            let data = await this.prismaService.users.findMany({
-                where: {
-                    role_id: 3,
-                },
+            let data = await this.prismaService.customers.findMany({
                 select: {
                     id: true,
                     email: true,
                     name: true,
                     mobile: true,
                     created_at: true,
-                    status: true,
-                    role: true,
+                    address: true,
+                    district: true,
+                    sub_district: true,
+                    province: true,
+                    postal_code: true,
+                    user: {
+                        select: {
+                            id: true,
+                            status: true,
+                        }
+                    },
                 },
                 take: take,
                 skip: skip,
             })
+            // delete data["user"]["name"]
+            let count = await this.prismaService.customers.count()
 
             return res.status(200).send({
                 data: data,
-                pages: pages,
-                size: size
+                pages: parseInt(pages),
+                size: parseInt(size),
+                count: count
             })
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'cannot found data',
+                error: 'data not found',
             }, HttpStatus.INTERNAL_SERVER_ERROR, {
                 cause: error
             });
@@ -175,32 +184,33 @@ export class CustomersService {
         }
     }
 
-    async searchData(word: string, pages: string, size: string, res: FastifyReply) {
+    async searchData(type: string, word: string, pages: string, size: string, res: FastifyReply) {
 
         try {
             let take = Number(size)
             let skip = (Number(pages) - 1) * take
+            let where = {}
+            if (type == 'name') {
+                where = {
+                    name: {
+                        contains: word
+                    }
+                }
+            } else if (type == 'email') {
+                where = {
+                    email: {
+                        contains: word
+                    }
+                }
+            } else if (type == 'mobile') {
+                where = {
+                    mobile: {
+                        contains: word
+                    }
+                }
+            }
             let data = await this.prismaService.users.findMany({
-                where: {
-                    role_id: 3,
-                    OR: [
-                        {
-                            email: {
-                                contains: word,
-                            },
-                        },
-                        {
-                            mobile: {
-                                contains: word,
-                            },
-                        },
-                        {
-                            name: {
-                                contains: word,
-                            },
-                        },
-                    ],
-                },
+                where,
                 select: {
                     id: true,
                     email: true,
@@ -216,13 +226,13 @@ export class CustomersService {
 
             return res.status(200).send({
                 data: data,
-                pages: pages,
-                size: size
+                pages: parseInt(pages),
+                size: parseInt(size)
             })
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'cannot found data',
+                error: 'data not found',
             }, HttpStatus.INTERNAL_SERVER_ERROR, {
                 cause: error
             });

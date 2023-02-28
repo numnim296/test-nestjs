@@ -20,23 +20,24 @@ export class RoleService {
                     id: true,
                     email: true,
                     status: true,
-                    // role_id: true,
                     role: true
 
                 },
                 take: take,
                 skip: skip,
             })
+            let count = await this.prismaService.users.count()
 
             return res.status(200).send({
                 data: data,
-                pages: pages,
-                size: size
+                pages: parseInt(pages),
+                size:  parseInt(size),
+                count: count
             })
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'cannot found data',
+                error: 'data not found',
             }, HttpStatus.INTERNAL_SERVER_ERROR, {
                 cause: error
             });
@@ -78,13 +79,13 @@ export class RoleService {
 
             return res.status(200).send({
                 data: data,
-                pages: pages,
-                size: size
+                pages: parseInt(pages),
+                size: parseInt(size),
             })
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'cannot found data',
+                error: 'data not found',
             }, HttpStatus.INTERNAL_SERVER_ERROR, {
                 cause: error
             });

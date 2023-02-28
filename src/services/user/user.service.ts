@@ -7,6 +7,8 @@ import { FastifyReply } from 'fastify'
 import { CreateUserDto } from 'src/dto/user.dto';
 import { hash } from 'src/helpers/hash';
 import { randomBytes } from 'crypto'
+import { Prisma } from '@prisma/client';
+import { set } from 'lodash'
 
 @Injectable()
 export class UserService {
@@ -38,14 +40,14 @@ export class UserService {
 
             return res.status(200).send({
                 data: data,
-                pages: pages,
-                size: size,
-                count:count,
+                pages: parseInt(pages),
+                size: parseInt(size),
+                count: count,
             })
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'cannot found data',
+                error: 'data not found',
             }, HttpStatus.INTERNAL_SERVER_ERROR, {
                 cause: error
             });
@@ -59,53 +61,53 @@ export class UserService {
             console.log("password - ", passwordRandom);
             // /clUsSOA8Lc=
             //send password to email
-            this.mailDto.to = body.email
-            this.mailDto.from = ""
-            this.mailDto.subject = "smartmeter password"
-            this.mailDto.html = `
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Smart Meter</title>
-            </head>
-            <body> 
-                <div>
-                    <p>รหัสผ่านคือ ${passwordRandom}</p>
-                </div>
-            </body>
-            </html>
-             `
-            const [isSendMail, errorMessage] = await this.mailService.sendMail(this.mailDto)
-            if (isSendMail) {
-                const password = hash(passwordRandom)
+            // this.mailDto.to = body.email
+            // this.mailDto.from = ""
+            // this.mailDto.subject = "smartmeter password"
+            // this.mailDto.html = `
+            // <!DOCTYPE html>
+            // <html lang="en">
+            // <head>
+            //     <meta charset="UTF-8">
+            //     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            //     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            //     <title>Smart Meter</title>
+            // </head>
+            // <body> 
+            //     <div>
+            //         <p>รหัสผ่านคือ ${passwordRandom}</p>
+            //     </div>
+            // </body>
+            // </html>
+            //  `
+            // const [isSendMail, errorMessage] = await this.mailService.sendMail(this.mailDto)
+            // if (isSendMail) {
+            const password = hash(passwordRandom)
 
-                await this.prismaService.users.create({
-                    data: {
-                        name: body.name,
-                        email: body.email,
-                        password: password.hash,
-                        role_id: body.role_id,
-                        created_at: new Date(),
-                        salt: password.salt,
-                        status: 1,
-                        mobile: body.mobile,
-                    },
-                })
-                return res.status(HttpStatus.OK).send({
-                    status: HttpStatus.OK,
-                    message: "create user profile success!"
-                })
-            } else {
-                throw new HttpException({
-                    status: HttpStatus.INTERNAL_SERVER_ERROR,
-                    error: 'cannot send password to email. please check your mail and try again.',
-                }, HttpStatus.INTERNAL_SERVER_ERROR, {
-                    cause: errorMessage
-                });
-            }
+            await this.prismaService.users.create({
+                data: {
+                    name: body.name,
+                    email: body.email,
+                    password: password.hash,
+                    role_id: body.role_id,
+                    created_at: new Date(),
+                    salt: password.salt,
+                    status: 1,
+                    mobile: body.mobile,
+                },
+            })
+            return res.status(HttpStatus.OK).send({
+                status: HttpStatus.OK,
+                message: "create user profile success!"
+            })
+            // } else {
+            //     throw new HttpException({
+            //         status: HttpStatus.INTERNAL_SERVER_ERROR,
+            //         error: 'cannot send password to email. please check your mail and try again.',
+            //     }, HttpStatus.INTERNAL_SERVER_ERROR, {
+            //         cause: errorMessage
+            //     });
+            // }
 
         } catch (error) {
             throw new HttpException({
@@ -194,31 +196,34 @@ export class UserService {
         }
     }
 
-    async searchData(word: string, pages: string, size: string, res: FastifyReply) {
+    async searchData(type: string, word: string, pages: string, size: string, res: FastifyReply) {
 
         try {
             let take = Number(size)
             let skip = (Number(pages) - 1) * take
+            let where = {}
+            if (type == 'name') {
+                where = {
+                    name: {
+                        contains: word
+                    }
+                }
+            } else if (type == 'email') {
+                where = {
+                    email: {
+                        contains: word
+                    }
+                }
+            } else if (type == 'mobile') {
+                where = {
+                    mobile: {
+                        contains: word
+                    }
+                }
+            }
+
             let data = await this.prismaService.users.findMany({
-                where: {
-                    OR: [
-                        {
-                            email: {
-                                contains: word,
-                            },
-                        },
-                        {
-                            mobile: {
-                                contains: word,
-                            },
-                        },
-                        {
-                            name: {
-                                contains: word,
-                            },
-                        },
-                    ],
-                },
+                where,
                 select: {
                     id: true,
                     email: true,
@@ -231,21 +236,27 @@ export class UserService {
                 take: take,
                 skip: skip,
             })
+            let count = await this.prismaService.users.count({
+                where
+            })
 
             return res.status(200).send({
                 data: data,
-                pages: pages,
-                size: size
+                pages: parseInt(pages),
+                size: parseInt(size),
+                count: count,
             })
         } catch (error) {
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
-                error: 'cannot found data',
+                error: 'data not found',
             }, HttpStatus.INTERNAL_SERVER_ERROR, {
                 cause: error
             });
         }
     }
+
+    
 
 
 }

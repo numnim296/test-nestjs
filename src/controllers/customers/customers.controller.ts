@@ -40,7 +40,7 @@ export class CustomersController {
     @UseGuards(AuthGuard('jwt'))
     @Get('search')
     searchData(@Query() params: any, @Res() res: FastifyReply) {
-        return this.customersService.searchData(params.word, params.pages, params.size, res)
+        return this.customersService.searchData(params.type, params.word, params.pages, params.size, res)
     }
 
 

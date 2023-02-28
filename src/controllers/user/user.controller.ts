@@ -46,7 +46,7 @@ export class UserController {
     @UseGuards(AuthGuard('jwt'))
     @Get('search')
     searchData(@Query() params: any, @Res() res: FastifyReply) {
-        return this.userService.searchData(params.word, params.pages, params.size, res)
+        return this.userService.searchData(params.type, params.word, params.pages, params.size, res)
     }
 
 
