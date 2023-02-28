@@ -24,6 +24,11 @@ export class UserService {
             let take = Number(size)
             let skip = (Number(pages) - 1) * take
             let data = await this.prismaService.users.findMany({
+                where: {
+                    NOT: {
+                        role_id: 3,
+                    }
+                },
                 select: {
                     id: true,
                     email: true,
@@ -256,7 +261,7 @@ export class UserService {
         }
     }
 
-    
+
 
 
 }
