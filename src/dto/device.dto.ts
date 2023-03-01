@@ -3,11 +3,11 @@ import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-
 export class CreateDeviceDto {
     @IsNotEmpty()
     @IsString()
-    device_id: string
+    code: string
 
     @IsNotEmpty()
     @IsString()
-    device_name: string
+    name: string
 
     @IsNotEmpty()
     @IsString()
@@ -20,10 +20,6 @@ export class CreateDeviceDto {
     @IsNotEmpty()
     @IsString()
     sn: string
-
-    @IsNotEmpty()
-    @IsNumber()
-    meter_number: number
 
     @IsNotEmpty()
     @IsDateString()

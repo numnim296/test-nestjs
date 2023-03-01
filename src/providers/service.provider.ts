@@ -10,7 +10,7 @@ import {
   MailService,
   PaymentService,
   DeviceService,
-  RoleService
+  // RoleService
 } from '../services'
 
 
@@ -19,7 +19,7 @@ export const ServiceProvider: Provider[] = [
   UserService,
   AuthService,
   JwtStrategy,
-  RoleService,
+  // RoleService,
   CustomersService,
   DeviceService,
   PaymentService,

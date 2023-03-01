@@ -16,38 +16,6 @@ export class AuthService {
         private jwtService: JwtService,
         private config: ConfigService,) { }
 
-    // login(body: LoginDto, session: secureSession.Session): Observable<UserSession> {
-    //     return from(
-    //         this.prismaService.users.findFirst({
-    //             where: {
-    //                 //username not email
-    //                 email: body.username,
-    //                 //   status: 'ACTIVE',
-    //             },
-    //         }),
-    //     ).pipe(
-    //         tap((user) => {
-    //             console.log(user);
-
-    //             console.log(body.password, user.password, user.salt)
-    //             if (!user || !compare(body.password, user.password, user.salt)) {
-    //                 console.log('jijitttt')
-    //                 throw new UnauthorizedException()
-    //             }
-    //         }),
-    //         map((user) => {
-    //             delete user.password
-    //             delete user.salt
-
-    //             const newData = {
-    //                 ...user,
-    //             }
-
-    //             session.set(SESSION_KEY.USER, user)
-    //             return user
-    //         }),
-    //     )
-    // }
 
     async login(dto: LoginDto) {
         const user = await this.prismaService.users.findFirst({

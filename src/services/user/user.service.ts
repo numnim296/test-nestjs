@@ -99,6 +99,9 @@ export class UserService {
                     salt: password.salt,
                     status: 1,
                     mobile: body.mobile,
+                    created_by: "",
+                    updated_by: "",
+                    updated_at: new Date()
                 },
             })
             return res.status(HttpStatus.OK).send({
@@ -181,7 +184,7 @@ export class UserService {
         try {
             await this.prismaService.users.update({
                 where: {
-                    email:body.email
+                    email: body.email
                 },
                 data: {
                     password: hash(body.password).hash,

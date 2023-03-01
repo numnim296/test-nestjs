@@ -75,6 +75,9 @@ export class CustomersService {
                     salt: password.salt,
                     status: 1,
                     mobile: body.mobile,
+                    created_by: "",
+                    updated_by: "",
+                    updated_at: new Date()
                 },
             })
 

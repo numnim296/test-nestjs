@@ -3,75 +3,14 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
-}
-
-model devices {
-  id           Int       @id @default(autoincrement())
-  device_id    String    @db.VarChar(100)
-  device_name  String    @db.VarChar(100)
-  brand        String    @db.VarChar(100)
-  model        String    @db.VarChar(100)
-  sn           String    @db.VarChar(100)
-  meter_number Int       @default(0)
-  start_date   DateTime? @db.Timestamp(0)
-  end_date     DateTime? @db.Timestamp(0)
-  note         String?   @db.Text
-  status       Int       @default(1)
-  created_by   String    @db.VarChar(100)
-  created_at   DateTime? @db.Timestamp(0)
-  updated_by   String    @db.VarChar(100)
-  updated_at   DateTime  @default(now()) @db.Timestamp(0)
-}
-
-model devices_logs {
-  id         Int      @id @default(autoincrement())
-  dev_id     Int
-  cust_id    Int
-  status     Int
-  created_at DateTime @default(now()) @db.Timestamp(0)
-}
-
-model payments {
-  id         Int       @id @default(autoincrement())
-  txid       String    @db.VarChar(100)
-  device_id  Int
-  cust_id    Int
-  amount     Float     @default(0)
-  ref_no     String?   @db.VarChar(100)
-  status     Int       @default(0)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime  @default(now()) @db.Timestamp(0)
-}
-
-model roles {
-  id         Int       @id @default(autoincrement())
-  name       String    @db.VarChar(100)
-  created_at DateTime? @db.Timestamp(0)
-  updated_at DateTime  @default(now()) @db.Timestamp(0)
-  users      users[]
-}
-
-model users {
-  id         Int         @id @default(autoincrement())
-  email      String      @db.VarChar(100) @unique
-  password   String      @db.VarChar(100)
-  salt       String      @db.VarChar(100)
-  role       roles       @relation(fields: [role_id], references: [id])
-  role_id    Int
-  name       String      @db.VarChar(100)
-  mobile     String?     @db.VarChar(20)
-  status     Int         @default(1)
-  created_at DateTime?   @db.Timestamp(0)
-  updated_at DateTime    @default(now()) @db.Timestamp(0)
-  customers  customers[]
 }
 
 model address {
   id           Int    @id @default(autoincrement())
-  country      String @db.VarChar(20)
-  postal_code  String @db.VarChar(10)
+  country      String @db.VarChar(100)
+  postal_code  String @db.VarChar(100)
   province     String @db.VarChar(100)
   district     String @db.VarChar(100)
   sub_district String @db.VarChar(100)
@@ -85,12 +24,75 @@ model customers {
   email        String    @db.VarChar(100)
   mobile       String    @db.VarChar(20)
   address      String    @db.VarChar(200)
-  sub_district String    @db.VarChar(100)
-  district     String    @db.VarChar(100)
-  province     String    @db.VarChar(100)
-  postal_code  String    @db.VarChar(10)
+  sub_district String?   @db.VarChar(100)
+  district     String?   @db.VarChar(100)
+  province     String?   @db.VarChar(100)
+  postal_code  String?   @db.VarChar(100)
   created_by   String    @db.VarChar(100)
-  created_at   DateTime? @db.Timestamp(0)
-  updated_by   String    @db.VarChar(100)
-  updated_at   DateTime  @default(now()) @db.Timestamp(0)
+  created_at   DateTime  @db.Timestamp(6)
+  updated_by   String?   @db.VarChar(100)
+  updated_at   DateTime? @db.Timestamp(6)
+  status       Int       @default(1) @db.SmallInt
+}
+
+model devices {
+  id         Int       @id @default(autoincrement())
+  code       String    @db.VarChar(100)
+  name       String    @db.VarChar(100)
+  brand      String    @db.VarChar(100)
+  model      String    @db.VarChar(100)
+  sn         String    @db.VarChar(100)
+  start_date DateTime? @db.Timestamp(6)
+  end_date   DateTime? @db.Timestamp(6)
+  note       String?
+  status     Int       @default(1) @db.SmallInt
+  created_by String    @db.VarChar(100)
+  created_at DateTime  @db.Timestamp(6)
+  updated_by String?   @db.VarChar(100)
+  updated_at DateTime? @db.Timestamp(6)
+}
+
+model devices_logs {
+  id         Int      @id @default(autoincrement())
+  dev_id     Int
+  cust_id    Int
+  status     Int      @db.SmallInt
+  created_at DateTime @db.Timestamp(6)
+}
+
+model payments {
+  id         Int       @id @default(autoincrement())
+  txid       String    @db.VarChar(100)
+  device_id  Int
+  cust_id    Int
+  amount     Decimal   @default(0.00) @db.Decimal
+  ref_no     String?   @db.VarChar(100)
+  status     Int       @db.SmallInt
+  created_at DateTime  @db.Timestamp(6)
+  updated_at DateTime? @db.Timestamp(6)
+}
+
+model roles {
+  id         Int       @id @default(autoincrement())
+  name       String    @db.VarChar(100)
+  created_at DateTime  @db.Timestamp(6)
+  updated_at DateTime? @db.Timestamp(6)
+  users      users[]
+}
+
+model users {
+  id         Int         @id @default(autoincrement())
+  email      String      @unique @db.VarChar(100)
+  password   String      @db.VarChar(100)
+  salt       String      @db.VarChar(100)
+  role       roles       @relation(fields: [role_id], references: [id])
+  role_id    Int
+  name       String      @db.VarChar(100)
+  mobile     String      @db.VarChar(20)
+  status     Int         @default(1) @db.SmallInt
+  created_by String      @db.VarChar(100)
+  created_at DateTime    @db.Timestamp(6)
+  updated_by String?     @db.VarChar(100)
+  updated_at DateTime?   @db.Timestamp(6)
+  customers  customers[]
 }
