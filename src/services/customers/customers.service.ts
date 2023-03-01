@@ -164,7 +164,7 @@ export class CustomersService {
         try {
             await this.prismaService.users.update({
                 where: {
-                    id: body.id,
+                    email: body.email,
                 },
                 data: {
                     password: hash(body.password).hash,

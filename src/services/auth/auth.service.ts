@@ -1,14 +1,12 @@
-import * as secureSession from '@fastify/secure-session'
+import { resetDto } from './../../dto/auth.dto';
 import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { LoginDto } from 'src/dto';
-import { from, map, Observable, tap } from 'rxjs'
-import { UserSession } from 'src/interfaces';
 import { PrismaService } from '../prisma/prisma.service';
 import { compare } from 'src/helpers/hash';
-import { SESSION_KEY } from 'src/constants';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload, Tokens } from 'src/types';
+import { FastifyReply } from 'fastify';
 
 
 @Injectable()
@@ -107,5 +105,13 @@ export class AuthService {
             refresh_token: rt,
         };
     }
+
+    async Reset(dto: resetDto,res:FastifyReply) {
+        // send link and token to email
+
+        //
+        return  res.send(200)
+    }
+
 
 }

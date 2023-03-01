@@ -51,12 +51,11 @@ export class UpdateUserDto  {
 export class ResetPasswordDto {
     @IsOptional()
     @IsString()
-    id: number
+    email: string
 
     @IsNotEmpty()
     @IsString()
     password: string
-
 
 }
 

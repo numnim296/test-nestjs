@@ -55,7 +55,7 @@ model roles {
 
 model users {
   id         Int         @id @default(autoincrement())
-  email      String      @db.VarChar(100)
+  email      String      @db.VarChar(100) @unique
   password   String      @db.VarChar(100)
   salt       String      @db.VarChar(100)
   role       roles       @relation(fields: [role_id], references: [id])
