@@ -1,7 +1,4 @@
-
-// import { ResetPasswordDto } from './../../dto/user.dto';
-import { Body, Controller, Post, Res, Session } from '@nestjs/common';
-// import * as secureSession from '@fastify/secure-session'
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { LoginDto,resetDto } from 'src/dto'
 import { AuthService } from 'src/services'
 import { FastifyReply } from 'fastify';

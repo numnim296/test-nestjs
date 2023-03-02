@@ -1,6 +1,6 @@
 import { CreateDeviceDto, UpdateDeviceDto } from './../../dto/device.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyReply } from 'fastify';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()

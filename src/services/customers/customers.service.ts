@@ -3,7 +3,6 @@ import { ResetPasswordDto, UpdateUserDto } from './../../dto/user.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { FastifyReply } from 'fastify'
-import { CreateUserDto } from 'src/dto/user.dto';
 import { hash } from 'src/helpers/hash';
 import { randomBytes } from 'crypto'
 
