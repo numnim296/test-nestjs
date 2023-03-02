@@ -39,7 +39,6 @@ export class AuthService {
             throw new UnauthorizedException()
         }
         const tokens = await this.getTokens(user.id, user.email);
-        // await this.updateRtHash(user.id, tokens.refresh_token);
         const data = {
             access_token: tokens.access_token,
             id: user.id,

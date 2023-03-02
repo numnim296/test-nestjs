@@ -57,7 +57,7 @@ export class CustomersService {
         }
     }
 
-    async addCustomer(body: CreateCustomersDto, res: FastifyReply) {
+    async addCustomer(body: CreateCustomersDto, userEmail: string, res: FastifyReply) {
         try {
 
             const passwordRandom = randomBytes(8).toString('base64')
@@ -75,8 +75,8 @@ export class CustomersService {
                     salt: password.salt,
                     status: 1,
                     mobile: body.mobile,
-                    created_by: "",
-                    updated_by: "",
+                    created_by: userEmail,
+                    updated_by: userEmail,
                     updated_at: new Date()
                 },
             })
@@ -111,7 +111,7 @@ export class CustomersService {
         }
     }
 
-    async updateCustomer(body: UpdateUserDto, res: FastifyReply) {
+    async updateCustomer(body: UpdateUserDto, userEmail: string, res: FastifyReply) {
         try {
             await this.prismaService.users.update({
                 where: {
@@ -122,6 +122,8 @@ export class CustomersService {
                     email: body.email,
                     mobile: body.mobile,
                     status: body.status,
+                    updated_at: new Date(),
+                    updated_by: userEmail
                 },
             })
             return res.status(HttpStatus.OK).send({
@@ -138,7 +140,7 @@ export class CustomersService {
         }
     }
 
-    async deleteCustomer(id: string, res: FastifyReply) {
+    async deleteCustomer(id: string, userEmail: string, res: FastifyReply) {
         try {
 
             await this.prismaService.users.update({
@@ -147,6 +149,8 @@ export class CustomersService {
                 },
                 data: {
                     status: 0,
+                    updated_at: new Date(),
+                    updated_by: userEmail
                 },
             })
             return res.status(HttpStatus.OK).send({

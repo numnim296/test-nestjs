@@ -59,7 +59,7 @@ export class UserService {
         }
     }
 
-    async addUserProfile(body: CreateUserDto, res: FastifyReply) {
+    async addUserProfile(body: CreateUserDto, userEmail: string, res: FastifyReply) {
         try {
 
             const passwordRandom = randomBytes(8).toString('base64')
@@ -99,8 +99,8 @@ export class UserService {
                     salt: password.salt,
                     status: 1,
                     mobile: body.mobile,
-                    created_by: "",
-                    updated_by: "",
+                    created_by: userEmail,
+                    updated_by: userEmail,
                     updated_at: new Date()
                 },
             })
@@ -118,6 +118,7 @@ export class UserService {
             // }
 
         } catch (error) {
+            console.log(error)
             throw new HttpException({
                 status: HttpStatus.INTERNAL_SERVER_ERROR,
                 error: 'cannot insert data',
@@ -127,7 +128,7 @@ export class UserService {
         }
     }
 
-    async updateUserProfile(body: UpdateUserDto, res: FastifyReply) {
+    async updateUserProfile(body: UpdateUserDto, userEmail: string, res: FastifyReply) {
         try {
             await this.prismaService.users.update({
                 where: {
@@ -138,6 +139,8 @@ export class UserService {
                     email: body.email,
                     mobile: body.mobile,
                     status: body.status,
+                    updated_by: userEmail,
+                    updated_at: new Date()
                 },
             })
             return res.status(HttpStatus.OK).send({
