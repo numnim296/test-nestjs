@@ -1,6 +1,6 @@
 import { CreateCustomersDto } from './../../dto/customers.dto';
 import { CustomersService } from './../../services/customers/customers.service';
-import { CreateUserDto, UpdateUserDto } from './../../dto/user.dto';
+import { UpdateUserDto } from './../../dto/user.dto';
 import { Body, Controller, Delete, Get, Param, Post, Query, Res, UseGuards } from '@nestjs/common';
 import { FastifyReply } from 'fastify'
 import { AuthGuard } from '@nestjs/passport';
